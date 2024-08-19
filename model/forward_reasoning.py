@@ -1,13 +1,13 @@
-from rule_set import ruleset
+from .rule_set import ruleset
 
 def forward_reasoning(goal, kb):
     if goal in kb:
         return "La meta ya existe en la base de conocimiento"
     new_items = {}
     rules_used = {}
+    is_repeating = False
     # Repeats the process until it finds the goal
-    # TODO: Fix for the case when is not possible to find the goal using the ruleset
-    while goal not in kb:
+    while goal not in kb and not is_repeating:
         # Search all facts from the KB
         for h in kb:
             ##print(f"Using fact H{h} from KB")
@@ -30,8 +30,11 @@ def forward_reasoning(goal, kb):
                         ##print(f"The rule conclusion ({rule[2]}) of rule {rule[0]} should be added")
                         rules_used[rule[0]] = None
                         new_items[rule[2]] = None
+        if new_items == {}:
+            is_repeating = True
         # Updates the KB in each cycle for continuing the search
         kb.update(new_items)
+        new_items.clear()
     # Returns the list of rules like: "Regla: i\n"
     description = '\n'.join([f"Regla: {keys}" for keys in rules_used.keys()])
     return description
