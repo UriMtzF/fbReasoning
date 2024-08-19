@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# C extensions
+*.c
+*.cpp
+*.h
+*.hpp
+
+# Test files
+*.pyt
+*.pytest
+
+# Distribution / packaging
+.eggs
+*.egg-info
+dist
+build
+.tox
+.venv
+venv

@@ -27,7 +27,7 @@ def run_forward():
 
 
 @app.route('/run_backward_reasoning', methods=['POST'])
-def run_forward():
+def run_backward():
     # TODO: Make it possible to send a goal and a KB
     goal = 2
     kb = {7: None, 8: None}
