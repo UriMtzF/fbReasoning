@@ -1,4 +1,4 @@
-import .ruleset from rule_set
+from .rule_set import ruleset
 
 def backward_reasoning(goal, kb, rules_used=None, visited_goals=None):
     if rules_used is None:
