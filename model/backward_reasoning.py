@@ -37,7 +37,7 @@ def backward_reasoning(goal, kb, rules_used=None, visited_goals=None):
             if all_conditions_met:
                 rules_used.append(rule_number)
                 kb[goal] = None  # Añade la meta a la base de conocimiento
-                return True, f"Reglas usadas: {', '.join(f'R{r}' for r in rules_used)}"
+                return True, f"{', '.join(f'R{r}' for r in rules_used)}"
 
     # Si no se puede satisfacer la meta, retorna falso
     return False, f"No se pudo alcanzar H{goal} con la base de conocimiento actual"
