@@ -17,14 +17,16 @@ def index():
     return render_template('index.html', ruleset=rules)
 
 def run_reasonings(goal, kb):
+    forward_kb = kb
+    backward_kb = kb
     forward_result = {}
     backward_result = {}
 
     def run_forward():
-        forward_result['message'] = forward_reasoning(goal, kb)
+        forward_result['message'] = forward_reasoning(goal, forward_kb)
 
     def run_backward():
-        solved, backward_result['message'] = backward_reasoning(goal, kb)
+        solved, backward_result['message'] = backward_reasoning(goal, backward_kb)
 
     forward_thread = threading.Thread(target=run_forward)
     backward_thread = threading.Thread(target=run_backward)
