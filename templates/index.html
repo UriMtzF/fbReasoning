@@ -15,6 +15,9 @@
             <textarea name="ruleBox" id="ruleBox" class="form-control" style="height:15em; width: 15em; margin: 0 auto;"
                       readonly>{{ ruleset }}</textarea>
         </div>
+        <center>
+            <button id="reasoning" type="button" class="btn btn-primary card-text">Iniciar el proceso</button>
+        </center>
     </div>
 </div>
 <div class="row" style="margin:50px;">
@@ -22,7 +25,6 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Razonamiento hacia delante</h5>
-                <button id="forwardReasoning" type="button" class="btn btn-primary card-text">Iniciar el proceso</button>
                 <div class="form-floating">
                     <textarea id="outputBox" class="form-control" style="height: 15em" readonly></textarea>
                     <label for="outputBox">Reglas seguidas</label>
@@ -34,7 +36,6 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Razonamiento hacia atrás</h5>
-                <button id="backwardReasoning" type="button" class="btn btn-primary card-text">Iniciar el proceso</button>
                 <div class="form-floating">
                     <textarea id="outputBox1" class="form-control" style="height: 15em" readonly></textarea>
                     <label for="outputBox1">Reglas seguidas</label>
@@ -47,18 +48,13 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script>
-    document.getElementById("forwardReasoning").addEventListener("click", function() {
-      fetch('/run_forward_reasoning', { method: 'POST' })
+    document.getElementById("reasoning").addEventListener("click", function() {
+      fetch('/run_reasonings', { method: 'POST' })
           .then(response => response.json())
           .then(data => {
-            document.getElementById("outputBox").textContent = data.message;
-          })
-    });
-document.getElementById("backwardReasoning").addEventListener("click", function() {
-      fetch('/run_backward_reasoning', { method: 'POST' })
-          .then(response => response.json())
-          .then(data => {
-            document.getElementById("outputBox1").textContent = data.message;
+            console.log(data);
+            document.getElementById("outputBox").value = data['forward_message'];
+            document.getElementById("outputBox1").value = data['backward_message'];
           })
     });
 </script>

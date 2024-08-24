@@ -2,9 +2,9 @@ from flask import Flask, render_template, jsonify
 from model.forward_reasoning import forward_reasoning
 from model.backward_reasoning import backward_reasoning
 from model.rule_set import ruleset
+import threading
 
 app = Flask(__name__)
-
 
 @app.route('/')
 def index():
@@ -16,23 +16,32 @@ def index():
         rules += f"R{rule_number}: {', '.join(causes)} => {conclusion}\n"
     return render_template('index.html', ruleset=rules)
 
+def run_reasonings(goal, kb):
+    forward_result = {}
+    backward_result = {}
 
-@app.route('/run_forward_reasoning', methods=['POST'])
-def run_forward():
-    # TODO: Make it possible to send a goal and a KB
+    def run_forward():
+        forward_result['message'] = forward_reasoning(goal, kb)
+
+    def run_backward():
+        solved, backward_result['message'] = backward_reasoning(goal, kb)
+
+    forward_thread = threading.Thread(target=run_forward)
+    backward_thread = threading.Thread(target=run_backward)
+
+    forward_thread.start()
+    backward_thread.start()
+
+    forward_thread.join()
+    backward_thread.join()
+
+    return forward_result['message'], backward_result['message']
+
+@app.route('/run_reasonings', methods=['POST'])
+def run_reasonings_route():
     goal = 2
     kb = {7: None, 8: None}
-    response = forward_reasoning(goal, kb)
-    return jsonify({'message': response})
-
-
-@app.route('/run_backward_reasoning', methods=['POST'])
-def run_backward():
-    # TODO: Make it possible to send a goal and a KB
-    goal = 2
-    kb = {7: None, 8: None}
-    response = backward_reasoning(goal, kb)
-    return jsonify({'message': response})
-
+    forward_message, backward_message = run_reasonings(goal, kb)
+    return jsonify({'forward_message': forward_message, 'backward_message': backward_message})
 
 app.run('0.0.0.0', port=8000, debug=True)

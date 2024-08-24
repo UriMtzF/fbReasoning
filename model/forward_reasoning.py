@@ -1,4 +1,4 @@
-from .rule_set import ruleset
+from model.rule_set import ruleset
 
 def forward_reasoning(goal, kb):
     if goal in kb:

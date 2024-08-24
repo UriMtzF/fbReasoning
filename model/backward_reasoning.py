@@ -1,4 +1,4 @@
-from .rule_set import ruleset
+from model.rule_set import ruleset
 
 def backward_reasoning(goal, kb, rules_used=None, visited_goals=None):
     if rules_used is None:
@@ -20,7 +20,7 @@ def backward_reasoning(goal, kb, rules_used=None, visited_goals=None):
     for rule in ruleset:
         rule_number = rule[0]
         conclusion = rule[2]
-        
+
         # Si la conclusión de la regla es la meta que estamos buscando
         if conclusion == goal:
             # Verifica si todas las condiciones de la regla están satisfechas
@@ -37,12 +37,13 @@ def backward_reasoning(goal, kb, rules_used=None, visited_goals=None):
             if all_conditions_met:
                 rules_used.append(rule_number)
                 kb[goal] = None  # Añade la meta a la base de conocimiento
-                return True, f"{', '.join(f'R{r}' for r in rules_used)}"
+                return True, "\n".join(f'Regla: {r}' for r in rules_used)
+
 
     # Si no se puede satisfacer la meta, retorna falso
     return False, f"No se pudo alcanzar H{goal} con la base de conocimiento actual"
 
-# para correrlo 
+# para correrlo
 def main():
     goal = 2
     kb = {7: None, 8: None}
