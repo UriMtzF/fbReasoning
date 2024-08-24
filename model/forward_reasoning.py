@@ -6,38 +6,33 @@ def forward_reasoning(goal, kb):
     new_items = {}
     rules_used = {}
     is_repeating = False
-    # Repeats the process until it finds the goal
+    previous_kb_size = len(kb)  # Keep track of the KB size
+
     while goal not in kb and not is_repeating:
-        # Search all facts from the KB
         for h in kb:
-            ##print(f"Using fact H{h} from KB")
             found_in = []
-            # Searches in all rules in the ruleset
             for rule in ruleset:
                 rule_number = rule[0]
                 conditions = rule[1]
-                # If the fact is in the conditions, add it to the local rule list
                 if h in conditions:
                     found_in.append(rule_number)
-            ##print(f"Found in rules {found_in}")
-            # From the list previously made use all
             for local_rule in found_in:
-                # From the ruleset use each rule
                 for rule in ruleset:
-                    # If the local rule (found in the causes) is also in the ruleset and
-                    # all of its causes are present in the KB, add the conclusion to the KB
                     if local_rule == rule[0] and all(knowledge_item in kb for knowledge_item in rule[1]):
-                        ##print(f"The rule conclusion ({rule[2]}) of rule {rule[0]} should be added")
                         rules_used[rule[0]] = None
                         new_items[rule[2]] = None
-        if new_items == {}:
+        if new_items == {} or len(kb) == previous_kb_size:  # Check if KB size changed
             is_repeating = True
-        # Updates the KB in each cycle for continuing the search
         kb.update(new_items)
+        previous_kb_size = len(kb)  # Update previous KB size
         new_items.clear()
-    # Returns the list of rules like: "Regla: i\n"
+
     description = '\n'.join([f"Regla: {keys}" for keys in rules_used.keys()])
-    return description
+    if goal in kb:
+        return description
+    else: 
+        return "La meta no se puede alcanzar"  # Indicate that the goal is unreachable
+
 
 
 # Main method for trying independently
