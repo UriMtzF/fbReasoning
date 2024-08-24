@@ -31,7 +31,7 @@ def run_backward():
     # TODO: Make it possible to send a goal and a KB
     goal = 2
     kb = {7: None, 8: None}
-    response = backward_reasoning(goal, kb)
+    solved, response = backward_reasoning(goal, kb)
     return jsonify({'message': response})
 
 
