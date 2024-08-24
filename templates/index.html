@@ -34,6 +34,11 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Razonamiento hacia atrás</h5>
+                <button id="backwardReasoning" type="button" class="btn btn-primary card-text">Iniciar el proceso</button>
+                <div class="form-floating">
+                    <textarea id="outputBox1" class="form-control" style="height: 15em" readonly></textarea>
+                    <label for="outputBox1">Reglas seguidas</label>
+                </div>
             </div>
         </div>
     </div>
@@ -47,6 +52,13 @@
           .then(response => response.json())
           .then(data => {
             document.getElementById("outputBox").textContent = data.message;
+          })
+    });
+document.getElementById("backwardReasoning").addEventListener("click", function() {
+      fetch('/run_backward_reasoning', { method: 'POST' })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("outputBox1").textContent = data.message;
           })
     });
 </script>

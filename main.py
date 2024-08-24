@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify
 from model.forward_reasoning import forward_reasoning
+from model.backward_reasoning import backward_reasoning
 from model.rule_set import ruleset
 
 app = Flask(__name__)
@@ -22,6 +23,15 @@ def run_forward():
     goal = 2
     kb = {7: None, 8: None}
     response = forward_reasoning(goal, kb)
+    return jsonify({'message': response})
+
+
+@app.route('/run_backward_reasoning', methods=['POST'])
+def run_backward():
+    # TODO: Make it possible to send a goal and a KB
+    goal = 2
+    kb = {7: None, 8: None}
+    response = backward_reasoning(goal, kb)
     return jsonify({'message': response})
 
 
