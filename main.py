@@ -1,3 +1,5 @@
+import copy
+
 from flask import Flask, render_template, jsonify, request
 from model.forward_reasoning import forward_reasoning
 from model.backward_reasoning import backward_reasoning
@@ -17,8 +19,8 @@ def index():
     return render_template('index.html', ruleset=rules)
 
 def run_reasonings(goal, kb):
-    forward_kb = kb
-    backward_kb = kb
+    forward_kb = copy.deepcopy(kb)
+    backward_kb = copy.deepcopy(kb)
     forward_result = {}
     backward_result = {}
 
