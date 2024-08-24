@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from model.forward_reasoning import forward_reasoning
 from model.backward_reasoning import backward_reasoning
 from model.rule_set import ruleset
@@ -39,8 +39,9 @@ def run_reasonings(goal, kb):
 
 @app.route('/run_reasonings', methods=['POST'])
 def run_reasonings_route():
-    goal = 2
-    kb = {7: None, 8: None}
+    data = request.get_json()
+    goal = data['goal']
+    kb = {int(k): v for k, v in data['kb'].items()}
     forward_message, backward_message = run_reasonings(goal, kb)
     return jsonify({'forward_message': forward_message, 'backward_message': backward_message})
 

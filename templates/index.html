@@ -15,6 +15,17 @@
             <textarea name="ruleBox" id="ruleBox" class="form-control" style="height:15em; width: 15em; margin: 0 auto;"
                       readonly>{{ ruleset }}</textarea>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title" style="text-align: center">Meta y base de conocimiento</h4>
+                <div>
+                    <label for="goal" class="form-label">Meta H (sólo número):</label>
+                    <input type="number" min="1" max="9" class="form-control" id="goal">
+                    <label for="kb" class="form-label">Base de conocimiento (número separados por comas):</label>
+                    <input type="text" class="form-control" id="kb">
+                </div>
+            </div>
+        </div>
         <center>
             <button id="reasoning" type="button" class="btn btn-primary card-text">Iniciar el proceso</button>
         </center>
@@ -49,7 +60,22 @@
         crossorigin="anonymous"></script>
 <script>
     document.getElementById("reasoning").addEventListener("click", function() {
-      fetch('/run_reasonings', { method: 'POST' })
+        let goal = parseInt(document.getElementById("goal").value);
+        let kb = document.getElementById("kb").value;
+
+        let kbArray = kb.split(',');
+
+        let kbDict = {};
+        kbArray.forEach(value => {
+            kbDict[value.trim()] = null;
+        })
+
+      fetch('/run_reasonings', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({goal: goal, kb: kbDict}) })
           .then(response => response.json())
           .then(data => {
             console.log(data);
