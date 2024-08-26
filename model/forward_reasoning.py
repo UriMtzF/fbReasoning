@@ -6,41 +6,32 @@ def forward_reasoning(goal, kb):
     new_items = {}
     rules_used = {}
     is_repeating = False
-    previous_kb_size = len(kb)  # Keep track of the KB size
 
     while goal not in kb and not is_repeating:
-        for h in kb:
-            found_in = []
-            for rule in ruleset:
-                rule_number = rule[0]
-                conditions = rule[1]
-                if h in conditions:
-                    found_in.append(rule_number)
-            for local_rule in found_in:
-                for rule in ruleset:
-                    if local_rule == rule[0] and all(knowledge_item in kb for knowledge_item in rule[1]):
-                        rules_used[rule[0]] = None
-                        new_items[rule[2]] = None
-        if new_items == {} or len(kb) == previous_kb_size:  # Check if KB size changed
-            is_repeating = True
+        previous_kb = kb.copy()  # Create a copy of the KB
+        for rule in ruleset:
+            rule_number = rule[0]
+            conditions = rule[1]
+            if all(knowledge_item in kb for knowledge_item in conditions):
+                rules_used[rule_number] = None
+                new_items[rule[2]] = None
         kb.update(new_items)
-        previous_kb_size = len(kb)  # Update previous KB size
+        if kb == previous_kb:  # Check if KB changed
+            is_repeating = True
         new_items.clear()
 
     description = '\n'.join([f"Regla: {keys}" for keys in rules_used.keys()])
+    print(kb)
     if goal in kb:
         return description
     else: 
-        return "La meta no se puede alcanzar"  # Indicate that the goal is unreachable
-
-
+        return "La meta no se puede alcanzar" 
 
 # Main method for trying independently
 def main():
-    goal = 2
-    kb: dict[int, None] = {7: None, 8: None}
+    goal = 5
+    kb: dict[int, None] = {7: None, 8: None, 1:None, 2:None, 9: None}
     print(forward_reasoning(goal, kb))
-
 
 if __name__ == '__main__':
     main()
