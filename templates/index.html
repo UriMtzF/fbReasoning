@@ -79,8 +79,8 @@
           .then(response => response.json())
           .then(data => {
             console.log(data);
-            document.getElementById("outputBox").value = data['forward_message'];
-            document.getElementById("outputBox1").value = data['backward_message'];
+            document.getElementById("outputBox").value = data['forward_message'] + "\n" + (data['forward_solved'] ? "Sí es posible llegar a la meta" : "");
+            document.getElementById("outputBox1").value = data['backward_message'] + "\n" + (data['backward_solved'] ? "Sí es posible llegar a la meta" : "");
           })
     });
 </script>

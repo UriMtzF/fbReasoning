@@ -2,7 +2,7 @@ from model.rule_set import ruleset
 
 def forward_reasoning(goal, kb):
     if goal in kb:
-        return "La meta ya existe en la base de conocimiento"
+        return True, "La meta ya existe en la base de conocimiento"
     new_items = {}
     rules_used = {}
     is_repeating = False
@@ -23,9 +23,9 @@ def forward_reasoning(goal, kb):
     description = '\n'.join([f"Regla: {keys}" for keys in rules_used.keys()])
     print(kb)
     if goal in kb:
-        return description
+        return True, description
     else: 
-        return "La meta no se puede alcanzar" 
+        return False, "La meta no se puede alcanzar" 
 
 # Main method for trying independently
 def main():

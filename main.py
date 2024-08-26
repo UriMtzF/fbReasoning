@@ -23,12 +23,14 @@ def run_reasonings(goal, kb):
     backward_kb = copy.deepcopy(kb)
     forward_result = {}
     backward_result = {}
+    forward_solved = False
+    backward_solved = False
 
     def run_forward():
-        forward_result['message'] = forward_reasoning(goal, forward_kb)
+        forward_result['is_solved'], forward_result['message'] = forward_reasoning(goal, forward_kb)
 
     def run_backward():
-        solved, backward_result['message'] = backward_reasoning(goal, backward_kb)
+        backward_result['is_solved'], backward_result['message'] = backward_reasoning(goal, backward_kb)
 
     forward_thread = threading.Thread(target=run_forward)
     backward_thread = threading.Thread(target=run_backward)
@@ -39,14 +41,14 @@ def run_reasonings(goal, kb):
     forward_thread.join()
     backward_thread.join()
 
-    return forward_result['message'], backward_result['message']
+    return forward_result, backward_result
 
 @app.route('/run_reasonings', methods=['POST'])
 def run_reasonings_route():
     data = request.get_json()
     goal = data['goal']
     kb = {int(k): v for k, v in data['kb'].items()}
-    forward_message, backward_message = run_reasonings(goal, kb)
-    return jsonify({'forward_message': forward_message, 'backward_message': backward_message})
+    forward_result, backward_result = run_reasonings(goal, kb)
+    return jsonify({'forward_message': forward_result['message'], 'backward_message': backward_result['message'], 'forward_solved': forward_result['is_solved'], 'backward_solved': backward_result['is_solved']})
 
 app.run('0.0.0.0', port=8000, debug=True)
